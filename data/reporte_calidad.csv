@@ -33,8 +33,8 @@ instalaciones,nivel_datos_sensibles,Completitud,98.0,95.0,APROBADO
 instalaciones,nivel_datos_sensibles,Exactitud,98.0,90.0,APROBADO
 instalaciones,cliente_id (FK→clientes),Consistencia,98.0,100.0,FALLIDO
 instalaciones,version_id (FK→versiones),Consistencia,99.0,100.0,FALLIDO
-instalaciones,fecha_instalacion >= fecha_release,Consistencia,96.67,100.0,FALLIDO
-instalaciones,fecha_instalacion (rango 2019-2021),Consistencia,99.0,100.0,FALLIDO
+instalaciones,fecha_instalacion >= fecha_release,Consistencia,96.47,100.0,FALLIDO
+instalaciones,fecha_instalacion (rango),Consistencia,99.0,100.0,FALLIDO
 clientes,cliente_id (unicidad PK),Consistencia,98.04,100.0,FALLIDO
 versiones_software,version_id (unicidad PK),Consistencia,100.0,100.0,APROBADO
 instalaciones,instalacion_id (unicidad PK),Consistencia,100.0,100.0,APROBADO
