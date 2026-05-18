@@ -61,7 +61,7 @@ Actividad_SUNBURST/
 |-----|----------------|-------------|
 | **Rol 1**: Diseñador de Datos | Modelado ER y generación de datos sintéticos | `clientes.csv`, `versiones_software.csv`, `instalaciones.csv` |
 | **Rol 2**: Analista de Calidad | Validación DAMA DMBOK y detección de anomalías | `eventos_seguridad.csv`, `reporte_calidad.csv`, 5 gráficos |
-| **Rol 3**: Integrador | Consolidación y mapeo al ciclo de vida | Pendiente |
+Rol 3: Integrador | Consolidación, integración y ciclo de vida | `eventos_ciclo_vida.csv`, `resumen_impacto.csv`, `dashboard`|
 
 ---
 
@@ -103,6 +103,9 @@ python scripts/rol1_generacion_datos.py
 # Rol 2: Análisis de calidad
 python scripts/rol2_calidad_datos.py
 ```
+# Rol 3: integración de codigo
+rol3_integracion.ipynb          # Integración y ciclo de vida de datos
+rol3_integracion.py             # Consolidación y análisis DAMA DMBOK
 
 ### 4. Explorar notebooks
 ```bash
