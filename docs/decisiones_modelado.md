@@ -1,110 +1,125 @@
 # Decisiones de Modelado - Rol 1
 
-## Proyecto: Análisis de Gestión de Datos del Caso SUNBURST de SolarWinds
-### Universidad de San Buenaventura | Gestión de Datos | 3er Semestre
+## Proyecto: Analisis de Gestion de Datos del Caso SUNBURST de SolarWinds
+### Universidad de San Buenaventura | Gestion de Datos | 3er Semestre
 
 ---
 
-## 1. Justificación del Modelo Entidad-Relación
+## 1. Justificacion del Modelo Entidad-Relacion
 
-### ¿Por qué 3 entidades?
+### Estructura de 3+1 Entidades
 
-Se diseñó un modelo con **3 entidades principales** (Clientes, Versiones_Software, Instalaciones) porque captura la estructura fundamental del escenario SUNBURST de manera clara y suficiente:
+Se diseno un modelo con **4 entidades** (3 base + 1 del Rol 2):
 
-1. **Clientes**: Representa las organizaciones que utilizaban SolarWinds Orion. Es esencial modelar quién fue afectado, su tipo, sector y nivel de criticidad.
+| Entidad | Responsable | Registros | Justificacion |
+|---------|-------------|-----------|---------------|
+| **Clientes** | Rol 1 | 50+1 dup | Organizaciones que usaban Orion |
+| **Versiones_Software** | Rol 1 | 8 | Versiones de Orion (SUNBURST vs limpias) |
+| **Instalaciones** | Rol 1 | 100 | Tabla puente cliente-version |
+| **Eventos_Seguridad** | Rol 2 | 200 | Actividad de seguridad en instalaciones |
 
-2. **Versiones_Software**: Captura las distintas versiones de la Plataforma Orion. La distinción entre versiones comprometidas y limpias es el eje central del análisis del caso.
+### Diagrama ER
 
-3. **Instalaciones**: Es la tabla puente que conecta clientes con versiones. Permite responder la pregunta central: *¿qué organizaciones instalaron versiones comprometidas?*
+El diagrama se genera como `visualizations/ER.png` usando matplotlib. Muestra las 4 entidades con sus claves primarias, foraneas y atributos.
 
-### ¿Por qué no más entidades?
+### Relaciones
 
-Se decidió no incluir entidades adicionales en el Rol 1 (como eventos o métricas) porque:
-- El Rol 1 se enfoca en el **modelado base** del escenario
-- Los eventos de seguridad son responsabilidad del Rol 2
-- Un modelo con 3 entidades es suficientemente complejo para demostrar relaciones y cardinalidades sin ser abrumador
-
----
-
-## 2. Selección de Atributos
-
-### Tabla Clientes (6 atributos)
-
-| Atributo | Justificación |
-|----------|--------------|
-| `cliente_id` | Identificador único necesario como clave primaria |
-| `nombre_organizacion` | Identifica la organización (generado con Faker para datos realistas) |
-| `tipo_org` | Distingue entre gobierno, empresas privadas, etc. Clave porque el caso afectó especialmente a agencias gubernamentales |
-| `pais` | Principalmente EE.UU. (70%) ya que SolarWinds es una empresa americana y sus clientes principales son norteamericanos |
-| `sector` | Permite analizar qué industrias fueron más afectadas (Tecnología, Defensa, Energía fueron las del caso real) |
-| `criticidad` | Correlacionada con tipo_org: organizaciones gubernamentales y de defensa tienen criticidad más alta |
-
-### Tabla Versiones_Software (5 atributos)
-
-| Atributo | Justificación |
-|----------|--------------|
-| `version_id` | Clave primaria |
-| `nombre_version` | Nombres reales de las versiones de Orion Platform del caso |
-| `fecha_release` | Fechas basadas en el timeline real del caso (Anexo 1 del caso Harvard) |
-| `contiene_sunburst` | **Atributo clave**: booleano que distingue versiones comprometidas de parches limpios |
-| `fecha_compilacion` | Relevante porque la fecha del 20/Feb/2020 es cuando se compiló SUNBURST |
-
-### Tabla Instalaciones (5 atributos)
-
-| Atributo | Justificación |
-|----------|--------------|
-| `instalacion_id` | Clave primaria |
-| `cliente_id` | FK a Clientes - permite rastrear qué organización instaló |
-| `version_id` | FK a Versiones - permite saber qué versión se instaló |
-| `fecha_instalacion` | Temporal - siempre posterior al release de la versión |
-| `nivel_datos_sensibles` | Correlacionado con la criticidad del cliente - fundamental para evaluar impacto |
+- **Clientes -> Instalaciones (1:N)**: Un cliente puede tener multiples instalaciones
+- **Versiones -> Instalaciones (1:N)**: Una version puede estar en multiples organizaciones
+- **Instalaciones -> Eventos (1:N)**: Una instalacion genera multiples eventos de seguridad
 
 ---
 
-## 3. Cardinalidades y Relaciones
+## 2. Seleccion de Atributos
 
-### Clientes → Instalaciones (1:N)
-- Un cliente puede tener **múltiples instalaciones** (diferentes versiones en diferentes momentos)
-- Cada instalación pertenece a **un solo cliente**
-- **Justificación**: En el caso real, las organizaciones podían tener múltiples servidores con Orion instalado, e incluso actualizar de una versión a otra
+### Tabla Clientes
 
-### Versiones → Instalaciones (1:N)
-- Una versión puede estar en **múltiples instalaciones** (muchas organizaciones descargan la misma versión)
-- Cada instalación corresponde a **una sola versión**
-- **Justificación**: Refleja el modelo de distribución de software donde una versión se distribuye a miles de clientes
+| Atributo | Tipo | Justificacion |
+|----------|------|---------------|
+| cliente_id | INT (PK) | Identificador unico |
+| nombre_organizacion | VARCHAR | Generado con Faker para datos realistas |
+| tipo_org | VARCHAR | Gobierno, Empresa, etc. (gobierno = target principal del caso) |
+| pais | VARCHAR | 70% EE.UU. (refleja la base real de SolarWinds) |
+| sector | VARCHAR | Tecnologia, Defensa, Energia (sectores del caso real) |
+| criticidad | VARCHAR | Correlacionada con tipo_org: gobierno = Alta |
 
-### Efecto N:M
-- La tabla Instalaciones actúa como **tabla puente** que resuelve la relación muchos-a-muchos entre Clientes y Versiones
-- Permite consultas como: *¿Cuántos clientes de criticidad Alta instalaron versiones con SUNBURST?*
+### Tabla Versiones_Software
 
----
+| Atributo | Tipo | Justificacion |
+|----------|------|---------------|
+| version_id | INT (PK) | Identificador unico |
+| nombre_version | VARCHAR | Nombres reales del caso (Orion Platform 2019.4, etc.) |
+| fecha_release | DATE | Basado en timeline real |
+| contiene_sunburst | BOOLEAN | Clave para distinguir versiones comprometidas |
+| fecha_compilacion | DATE | 20/Feb/2020 es la fecha clave del ataque |
 
-## 4. Decisiones sobre Datos Sintéticos
+### Tabla Instalaciones
 
-### Volúmenes
-- **50 clientes**: Suficiente variedad para análisis estadístico, representando una muestra del universo de 18,000
-- **8 versiones**: Todas las versiones relevantes mencionadas en el caso
-- **100 instalaciones**: 2x el número de clientes, permite que algunos clientes tengan múltiples instalaciones
-
-### Distribuciones
-- **Países**: 70% EE.UU. (refleja la base de clientes real de SolarWinds)
-- **Criticidad gubernamental**: 60% Alta (las agencias gubernamentales manejan información sensible)
-- **Versiones**: Mayor probabilidad para Orion 2020.2 (25%), la versión más distribuida
-- **Datos sensibles**: Correlacionados con criticidad del cliente (Alta → Crítico/Alto)
-
-### Reproducibilidad
-- **Semilla fija**: `np.random.seed(42)` y `Faker.seed(42)` garantizan que los mismos datos se generan cada vez
-- **Validación temporal**: Cada fecha de instalación es posterior a la fecha de release de la versión correspondiente
-- **Integridad referencial**: Todos los FK apuntan a registros existentes
+| Atributo | Tipo | Justificacion |
+|----------|------|---------------|
+| instalacion_id | INT (PK) | Identificador unico |
+| cliente_id | INT (FK) | Vinculo al cliente (con anomalias intencionales) |
+| version_id | INT (FK) | Vinculo a la version instalada |
+| fecha_instalacion | DATE | Posterior al release (con excepciones como anomalia) |
+| nivel_datos_sensibles | VARCHAR | Correlacionado con criticidad del cliente |
 
 ---
 
-## 5. Coherencia con el Caso Real
+## 3. Anomalias Intencionales
 
-| Aspecto | Caso Real | Datos Sintéticos |
+### Por que inyectar anomalias?
+
+En un entorno real, los datos **nunca** son perfectos. Un analisis de calidad que reporta 100% en todas las metricas no es creible ni util. Las anomalias se inyectaron para:
+
+1. **Simular la realidad** de datos migrados, importados o capturados manualmente
+2. **Probar la capacidad del Rol 2** de detectar problemas genuinos
+3. **Generar metricas DAMA que realmente fallen** y permitan un analisis critico
+4. **Demostrar el valor del framework DAMA DMBOK** en la practica
+
+### Anomalias inyectadas por tabla
+
+#### Clientes (5 anomalias)
+| Tipo | Detalle | Simulando |
+|------|---------|-----------|
+| 3 nulos en nombre | Filas 7, 23, 41 | Formularios de registro incompletos |
+| 2 paises vacios | Filas 15, 33 (string vacio, no NULL) | Campo obligatorio llenado con espacio |
+| 1 tipo_org invalido | 'Desconocido' en fila 28 | Valor por defecto mal configurado |
+| 1 criticidad nula | Fila 45 | Campo no evaluado |
+| 1 ID duplicado | cliente_id=12 aparece 2 veces | Error de migracion de datos |
+
+#### Versiones (1 anomalia)
+| Tipo | Detalle | Simulando |
+|------|---------|-----------|
+| 1 fecha_release nula | Version HF2 (ID=3) | Dato faltante en el registro historico |
+
+#### Instalaciones (6 anomalias)
+| Tipo | Detalle | Simulando |
+|------|---------|-----------|
+| 3 fechas inconsistentes | Antes del release (filas 5, 20, 56) | Error humano en la captura de fechas |
+| 2 FK cliente invalidas | IDs 999, 888 | Datos de clientes eliminados sin limpiar |
+| 1 FK version invalida | ID 99 | Referencia a version deprecada |
+| 2 nivel_sensibles nulos | Filas 9, 73 | Clasificacion pendiente |
+| 1 nivel_sensibles invalido | 'Desconocido' (fila 51) | Valor por defecto |
+| 1 fecha fuera de rango | 2023-11-15 (fila 89) | Error de tipeo en el ano |
+
+---
+
+## 4. Coherencia con el Caso Real
+
+| Aspecto | Caso Real | Datos Sinteticos |
 |---------|-----------|------------------|
-| Versiones con SUNBURST | 2019.4 hasta HF4, 2020.2, 2020.2 HF1 | 6 de 8 versiones (75%) |
-| Parches limpios | 2019.4 HF5, 2020.2.1 | 2 de 8 versiones (25%) |
-| Clientes afectados | ~18,000 descargas | 78% de instalaciones con versiones SUNBURST |
-| Tipo de clientes | Gobierno, Tech, Defensa | Mix similar con énfasis en gobierno |
-| Período temporal | Ene 2019 - May 2021 | Oct 2019 - Mar 2021 (período de instalaciones) |
+| Versiones con SUNBURST | 6 versiones | 6 de 8 (75%) |
+| Parches limpios | 2 versiones | 2 de 8 (25%) |
+| Descargas afectadas | ~18,000 | ~77% de instalaciones SUNBURST |
+| Comprometidos reales | <100 | ~11 instalaciones (~14%) |
+| Tipo de clientes | Gobierno, Tech, Defensa | Mix similar con enfasis gobierno |
+| Periodo temporal | Ene 2019 - May 2021 | Oct 2019 - Mar 2021 |
+| **Calidad de datos** | **Imperfecta (caso real)** | **Imperfecta (anomalias intencionales)** |
+
+---
+
+## 5. Reproducibilidad
+
+- **Semilla fija**: `np.random.seed(42)` y `Faker.seed(42)`
+- **Anomalias deterministas**: Se inyectan en posiciones fijas (mismos datos cada ejecucion)
+- **Diagrama ER**: Generado programaticamente, no requiere herramienta externa

@@ -1,7 +1,7 @@
 version_id,nombre_version,fecha_release,contiene_sunburst,fecha_compilacion
 1,Orion Platform 2019.4,2019-10-22,True,2019-10-10
 2,Orion Platform 2019.4 HF1,2019-12-17,True,2019-12-05
-3,Orion Platform 2019.4 HF2,2020-01-23,True,2020-01-10
+3,Orion Platform 2019.4 HF2,,True,2020-01-10
 4,Orion Platform 2019.4 HF3,2020-03-05,True,2020-02-20
 5,Orion Platform 2019.4 HF5,2020-03-26,False,2020-03-15
 6,Orion Platform 2020.2,2020-06-19,True,2020-06-04

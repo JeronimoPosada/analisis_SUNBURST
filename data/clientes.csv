@@ -5,7 +5,7 @@ cliente_id,nombre_organizacion,tipo_org,pais,sector,criticidad
 4,Agencia de Cualquier Corazón,Gobierno Federal,Estados Unidos,Gobierno,Alta
 5,Giménez y Sanchez S.Coop.,Empresa Privada,Canadá,Finanzas,Media
 6,Grupo Rocamora S.Com.,Empresa Privada,Australia,Defensa,Media
-7,Fábrica Navarro S.A.,ONG,Japón,Salud,Media
+7,,ONG,Japón,Salud,Media
 8,Ministerio de Ex Menos,Gobierno Estatal,Estados Unidos,Gobierno,Baja
 9,Hospital Palomar Pontevedra,Organización de Salud,Canadá,Salud,Media
 10,Departamento de Meses Llamado,Gobierno Federal,Alemania,Defensa,Baja
@@ -13,7 +13,7 @@ cliente_id,nombre_organizacion,tipo_org,pais,sector,criticidad
 12,Bermúdez y Marcos S.L.L.,Empresa Privada,Reino Unido,Telecomunicaciones,Alta
 13,Agencia de Económico Primeras,Gobierno Federal,Reino Unido,Defensa,Alta
 14,Hospital Pardo Teruel,Organización de Salud,Estados Unidos,Salud,Alta
-15,Banco LPEM S.A.,Empresa Privada,Estados Unidos,Gobierno,Alta
+15,Banco LPEM S.A.,Empresa Privada,,Gobierno,Alta
 16,Hospital Lobo Santa Cruz de Tenerife,Organización de Salud,Japón,Salud,Baja
 17,Cánovas y asociados S.Com.,ONG,Reino Unido,Gobierno,Baja
 18,Comercializadora Donoso & Asociados S.A.,Empresa Privada,Reino Unido,Salud,Media
@@ -21,17 +21,17 @@ cliente_id,nombre_organizacion,tipo_org,pais,sector,criticidad
 20,Logística Castellana S.A.T.,Empresa Privada,Australia,Finanzas,Baja
 21,Hermanos Quero S.C.P,Empresa Privada,Estados Unidos,Telecomunicaciones,Media
 22,Departamento de Habían Obstante,Gobierno Federal,Israel,Energía,Media
-23,Ministerio de Piel Salir,Gobierno Estatal,Estados Unidos,Energía,Media
+23,,Gobierno Estatal,Estados Unidos,Energía,Media
 24,Garcia y asociados S.Com.,ONG,Estados Unidos,Finanzas,Media
 25,Hospital Segarra Córdoba,Organización de Salud,Estados Unidos,Salud,Alta
 26,Ministerio de Otras Través,Gobierno Federal,Estados Unidos,Gobierno,Media
 27,Suministros Pujol y asociados S.A.T.,Empresa Privada,Estados Unidos,Energía,Media
-28,Transportes Bou S.L.,Empresa Privada,Estados Unidos,Energía,Baja
+28,Transportes Bou S.L.,Desconocido,Estados Unidos,Energía,Baja
 29,Universidad Burgos,Institución Educativa,Estados Unidos,Salud,Media
 30,Ministerio de Sangre Tenía,Gobierno Federal,Australia,Defensa,Alta
 31,Ministerio de Habla Ve,Gobierno Federal,Estados Unidos,Gobierno,Media
 32,Bartolomé y Plaza S.Com.,Empresa Privada,Estados Unidos,Telecomunicaciones,Media
-33,Benigna Iglesias Alberdi S.L.,Empresa Privada,Estados Unidos,Telecomunicaciones,Media
+33,Benigna Iglesias Alberdi S.L.,Empresa Privada,,Telecomunicaciones,Media
 34,Inmobiliaria RPIA S.L.,ONG,Estados Unidos,Energía,Media
 35,Hospital Lago Málaga,Organización de Salud,Japón,Salud,Media
 36,Inversiones AKTI S.L.N.E,Empresa Privada,Australia,Finanzas,Baja
@@ -39,13 +39,14 @@ cliente_id,nombre_organizacion,tipo_org,pais,sector,criticidad
 38,Hospital Abascal Madrid,Organización de Salud,Estados Unidos,Salud,Alta
 39,Familia Parejo S.L.N.E,Empresa Privada,Estados Unidos,Tecnología,Media
 40,Industrias Barco & Asociados S.L.N.E,Empresa Privada,Reino Unido,Salud,Media
-41,Compañía ZDNN S.A.,Empresa Privada,Estados Unidos,Tecnología,Media
+41,,Empresa Privada,Estados Unidos,Tecnología,Media
 42,Carmela Dalmau Landa S.Coop.,Empresa Privada,Estados Unidos,Energía,Media
 43,Departamento de Parecía Principio,Gobierno Estatal,Estados Unidos,Defensa,Alta
 44,Finanzas Inteligentes S.Com.,Empresa Privada,Estados Unidos,Gobierno,Media
-45,Universidad León,Institución Educativa,Estados Unidos,Educación,Alta
+45,Universidad León,Institución Educativa,Estados Unidos,Educación,
 46,Dionisio Huguet Gomila S.A.,Empresa Privada,Estados Unidos,Finanzas,Baja
 47,Departamento de Como Productos,Gobierno Federal,Estados Unidos,Defensa,Media
 48,Hotel Avanzadas S.A.,Empresa Privada,Estados Unidos,Salud,Media
 49,Universidad Ceuta,Institución Educativa,Estados Unidos,Energía,Baja
 50,Universidad Alicante,Institución Educativa,Estados Unidos,Finanzas,Media
+12,Entidad Duplicada S.A.,Empresa Privada,Estados Unidos,Tecnología,Media

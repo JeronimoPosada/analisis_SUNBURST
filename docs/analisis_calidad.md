@@ -1,170 +1,148 @@
-# Análisis de Calidad de Datos - Rol 2
+# Analisis de Calidad de Datos - Rol 2
 
-## Proyecto: Análisis de Gestión de Datos del Caso SUNBURST de SolarWinds
-### Universidad de San Buenaventura | Gestión de Datos | 3er Semestre
-
----
-
-## 1. Marco Teórico: DAMA DMBOK
-
-El **DAMA DMBOK** (Data Management Body of Knowledge) define la calidad de datos como el grado en que los datos satisfacen las necesidades establecidas. Para este análisis, se implementaron **3 dimensiones de calidad**:
-
-| Dimensión | Definición DAMA | Fórmula Implementada |
-|-----------|-----------------|---------------------|
-| **Completitud** | Grado en que todos los valores requeridos están presentes | `(no_nulos / total) × 100` |
-| **Exactitud** | Grado en que los datos representan correctamente la realidad | `(valores_válidos / total) × 100` |
-| **Consistencia** | Grado en que los datos son coherentes entre sí | `(relaciones_válidas / total) × 100` |
+## Proyecto: Analisis de Gestion de Datos del Caso SUNBURST de SolarWinds
+### Universidad de San Buenaventura | Gestion de Datos | 3er Semestre
 
 ---
 
-## 2. Métricas Aplicadas y Resultados
+## 1. Marco Teorico: DAMA DMBOK
 
-### 2.1 Completitud (Umbral: ≥ 95%)
+El **DAMA DMBOK** define la calidad de datos como el grado en que los datos satisfacen las necesidades establecidas. Se implementaron 3 dimensiones:
 
-Se evaluó cada columna de cada tabla para verificar la ausencia de valores nulos.
+| Dimension | Definicion | Formula | Umbral |
+|-----------|-----------|---------|--------|
+| **Completitud** | Campos completos (sin nulos ni vacios) | `(no_nulos / total) x 100` | >= 95% |
+| **Exactitud** | Valores dentro de rangos validos | `(validos / total) x 100` | >= 90% |
+| **Consistencia** | Coherencia entre tablas y relaciones | `(rel_validas / total) x 100` | = 100% |
 
-**Resultado**: ✅ **100% de completitud** en todas las tablas y columnas.
+---
 
-Esto es esperable dado que los datos fueron generados sintéticamente con funciones que garantizan la presencia de todos los valores. En un escenario real, la completitud suele ser menor, especialmente en campos opcionales.
-
-### 2.2 Exactitud (Umbral: ≥ 90%)
-
-Se verificó que los valores estén dentro de los rangos y formatos esperados:
-- **Strings**: No vacíos y con longitud razonable
-- **IDs numéricos**: Valores positivos
-- **Booleanos**: Valores válidos (`True`/`False`)
-- **Categorías**: Dentro de los valores permitidos
-
-**Resultado**: ✅ **100% de exactitud** en todas las validaciones.
-
-### 2.3 Consistencia (Umbral: 100%)
-
-Se validaron tres aspectos de consistencia:
-
-1. **Integridad referencial `cliente_id`**: Todos los `cliente_id` en la tabla `instalaciones` existen en la tabla `clientes`.
-   - **Resultado**: ✅ 100%
-
-2. **Integridad referencial `version_id`**: Todos los `version_id` en la tabla `instalaciones` existen en la tabla `versiones_software`.
-   - **Resultado**: ✅ 100%
-
-3. **Coherencia temporal**: Todas las fechas de instalación son posteriores a las fechas de release de la versión correspondiente.
-   - **Resultado**: ✅ 100%
+## 2. Resultados: Metricas DAMA
 
 ### Resumen General
 
-| Métrica | Evaluaciones | Aprobadas | Tasa |
-|---------|-------------|-----------|------|
-| Completitud | 16 columnas | 16 | 100% |
-| Exactitud | 16 columnas | 16 | 100% |
-| Consistencia | 3 relaciones | 3 | 100% |
-| **Total** | **35** | **35** | **100%** |
+| Categoria | Total | Aprobadas | Fallidas | Tasa |
+|-----------|-------|-----------|----------|------|
+| Completitud | 16 | 15 | 1 | 93.7% |
+| Exactitud | 16 | 15 | 1 | 93.7% |
+| Consistencia | 7 | 1 | 6 | 14.3% |
+| **TOTAL** | **39** | **31** | **8** | **79.5%** |
+
+### Metricas Fallidas (detalle)
+
+| Tabla | Columna | Metrica | Valor | Umbral | Deficit |
+|-------|---------|---------|-------|--------|---------|
+| clientes | nombre_organizacion | Completitud | 94.12% | 95% | -0.88% |
+| versiones_software | fecha_release | Completitud | 87.5% | 95% | -7.5% |
+| versiones_software | fecha_release | Exactitud | 87.5% | 90% | -2.5% |
+| instalaciones | cliente_id (FK) | Consistencia | 98.0% | 100% | -2.0% |
+| instalaciones | version_id (FK) | Consistencia | 99.0% | 100% | -1.0% |
+| instalaciones | fecha >= release | Consistencia | 96.67% | 100% | -3.33% |
+| instalaciones | rango 2019-2021 | Consistencia | 99.0% | 100% | -1.0% |
+| clientes | cliente_id (unicidad) | Consistencia | 98.04% | 100% | -1.96% |
+
+### Analisis Critico
+
+El resultado de **79.5% de aprobacion** es significativo. Mientras que las metricas de Completitud y Exactitud tienen tasas aceptables (>93%), la **Consistencia solo alcanza 14.3%**. Esto revela que los problemas mas graves no estan en campos individuales sino en las **relaciones entre tablas**.
+
+En un escenario de ciberseguridad como SUNBURST, una FK huerfana puede significar:
+- Una instalacion comprometida que no se puede vincular a su organizacion
+- Imposibilidad de notificar al cliente afectado
+- Subestimacion o sobreestimacion del impacto real
 
 ---
 
-## 3. Hallazgos de Calidad
+## 3. Anomalias Detectadas en los Datos
 
-### Fortalezas de los Datos
-1. **Cero valores nulos** en todas las tablas
-2. **Cero duplicados** en identificadores primarios
-3. **Integridad referencial perfecta** entre tablas
-4. **Coherencia temporal** completa
+### 3.1 Problemas Criticos (impactan directamente el analisis)
 
-### Observaciones
-1. Los datos sintéticos tienen calidad "perfecta", lo cual raramente ocurre en datos reales
-2. En un escenario real, se esperarían problemas como:
-   - Nombres de organizaciones con caracteres especiales o vacíos
-   - Fechas faltantes o en formatos inconsistentes
-   - IDs huérfanos (instalaciones apuntando a clientes eliminados)
-3. La calidad perfecta nos permite enfocarnos en el **análisis de anomalías de seguridad**
+| ID | Problema | Tabla | Detalle | Impacto |
+|----|---------|-------|---------|---------|
+| C1 | FK huerfana: cliente_id | instalaciones | IDs 999, 888 no existen en clientes | Las instalaciones 11 y 68 no tienen organizacion asociada |
+| C2 | FK huerfana: version_id | instalaciones | ID 99 no existe en versiones | La instalacion 36 no puede clasificarse como SUNBURST o limpia |
+| C3 | Inconsistencia temporal | instalaciones | 3 fechas anteriores al release | Instalaciones 5, 20, 56 tienen fechas imposibles |
+| C4 | Fecha fuera de rango | instalaciones | 2023-11-15 en fila 89 | Dato del futuro, fuera del periodo del caso |
+| C5 | PK duplicada | clientes | cliente_id=12 aparece 2 veces | Ambiguedad en la identidad del cliente |
+
+### 3.2 Problemas Altos (afectan la calidad pero no invalidan)
+
+| ID | Problema | Tabla | Detalle | Impacto |
+|----|---------|-------|---------|---------|
+| A1 | Nulos en nombre_organizacion | clientes | 3 registros (filas 7, 23, 41) | Organizaciones sin identificar |
+| A2 | Nulo en criticidad | clientes | 1 registro (fila 45) | No se puede clasificar el riesgo |
+| A3 | Nulo en fecha_release | versiones | Version HF2 (ID=3) | No se puede verificar temporalidad |
+| A4 | Nulos en nivel_datos_sensibles | instalaciones | 2 registros (filas 9, 73) | No se puede evaluar sensibilidad |
+
+### 3.3 Problemas Medios (advertencias)
+
+| ID | Problema | Tabla | Detalle | Impacto |
+|----|---------|-------|---------|---------|
+| M1 | Valor invalido tipo_org | clientes | 'Desconocido' (fila 28) | Categoria fuera de catalogo |
+| M2 | Valor invalido nivel_sensibles | instalaciones | 'Desconocido' (fila 51) | Categoria fuera de catalogo |
+| M3 | Paises vacios | clientes | 2 strings vacios (filas 15, 33) | Pais presente pero inutilizable |
+
+### Total: 10 problemas criticos + 3 advertencias
 
 ---
 
-## 4. Anomalías Detectadas
+## 4. Eventos de Seguridad
 
-### 4.1 Eventos de Seguridad Generados
+Se generaron **200 eventos de seguridad** simulando la actividad del malware:
 
-Se generaron **200 eventos de seguridad** simulando la actividad del malware SUNBURST:
-
-| Categoría | Cantidad | Porcentaje |
+| Categoria | Cantidad | Porcentaje |
 |-----------|----------|------------|
-| Eventos normales | ~187 | ~93.5% |
-| Eventos anómalos | ~13 | ~6.5% |
+| Eventos normales | ~188 | ~94% |
+| Eventos anomalos | ~12 | ~6% |
 
-### 4.2 Tipos de Eventos Anómalos
+### Tipos de eventos anomalos
 
-Los eventos anómalos se concentran en actividades maliciosas típicas de un APT (Advanced Persistent Threat):
+Los eventos anomalos se concentran en actividades tipicas de APT:
+- **conexion_c2**: Comunicacion con servidor de comando y control
+- **exfiltracion**: Extraccion de datos sensibles
+- **escalamiento_privilegios**: Obtencion de permisos elevados
+- **movimiento_lateral**: Propagacion dentro de la red
+- **modificacion_logs**: Eliminacion de evidencia
 
-| Tipo de Evento | Descripción | Relevancia al Caso |
-|----------------|-------------|-------------------|
-| `conexion_c2` | Conexión a servidor de comando y control | SUNBURST se comunicaba con servidores C2 para recibir instrucciones |
-| `exfiltracion` | Extracción de datos | El objetivo final era robar información sensible |
-| `escalamiento_privilegios` | Obtención de mayores permisos | Los atacantes escalaban privilegios para acceder a más recursos |
-| `movimiento_lateral` | Desplazamiento a otros sistemas | Los atacantes se movían dentro de la red de la víctima |
-| `modificacion_logs` | Alteración de registros | Los atacantes borraban su rastro |
+### Severidad anomala vs normal
 
-### 4.3 Severidad de Anomalías
+| Severidad | Normales | Anomalos |
+|-----------|---------|---------|
+| Baja | ~50% | ~5% |
+| Media | ~30% | ~10% |
+| Alta | ~15% | ~40% |
+| Critica | ~5% | ~45% |
 
-La distribución de severidad de eventos anómalos muestra un patrón coherente con ataques avanzados:
-- **Crítica**: ~45% de los eventos anómalos
-- **Alta**: ~40%
-- **Media**: ~10%
-- **Baja**: ~5%
-
-Esto contrasta con los eventos normales donde la severidad es predominantemente Baja (50%) y Media (30%).
+Esta distribucion inversa es la clave: los eventos anomalos son predominantemente de severidad Alta/Critica.
 
 ---
 
-## 5. Análisis del Problema 18,000 vs <100
+## 5. Cascada 18,000 vs <100
 
-### El Filtrado en Cascada
-
-Uno de los hallazgos más significativos del caso SUNBURST es la reducción dramática entre los clientes "afectados" inicialmente reportados y los realmente comprometidos:
-
-| Etapa | Caso Real | Datos Sintéticos |
+| Etapa | Caso Real | Datos Sinteticos |
 |-------|-----------|------------------|
-| Total descargas activadas | 18,000 | 100 instalaciones |
-| Con versiones SUNBURST | 18,000 | ~78 instalaciones |
-| Con actividad maliciosa detectada | No publicado | ~72 con eventos |
-| Realmente comprometidos | <100 | ~12 instalaciones |
-| Clientes únicos comprometidos | ~9 entidades gob. | ~12 clientes |
-| **Reducción total** | **>99.4%** | **~84.6%** |
-
-### ¿Por qué la diferencia?
-
-1. **No todas las instalaciones ejecutaban el malware**: Algunas organizaciones descargaron las versiones afectadas pero no las instalaron o las reemplazaron rápidamente
-2. **SUNBURST tenía un período de latencia**: El malware esperaba ~2 semanas antes de activarse, filtrando organizaciones fuera de línea
-3. **Los atacantes eran selectivos**: Solo explotaron activamente organizaciones de alto valor (gobierno, defensa, tecnología)
-4. **El Hotfix 5 detuvo la propagación**: Las organizaciones que aplicaron el parche dejaron de estar expuestas
-
-### Implicación para la Gestión de Datos
-
-La comunicación inicial de "18,000 afectados" versus la cifra real de "<100" demuestra:
-- La importancia de la **precisión en la comunicación de datos** durante crisis
-- El costo reputacional de sobreestimar el impacto (como mencionó Ramakrishna: "Todavía veo '18,000 afectados' en los titulares")
-- La necesidad de procesos de **filtrado y validación** antes de publicar cifras
+| Total descargas | 18,000 | 100 instalaciones |
+| Con SUNBURST | 18,000 | ~77 instalaciones |
+| Con eventos | N/A | ~70 con eventos |
+| Comprometidos | <100 | ~11 instalaciones |
+| Clientes unicos | ~9 entidades | ~10 clientes |
+| **Reduccion** | **>99.4%** | **~85.7%** |
 
 ---
 
-## 6. Visualizaciones Generadas
+## 6. Conclusiones Criticas
 
-Se crearon **5 gráficos** que visualizan los hallazgos:
+### Lo que un analisis superficial habria reportado
+"100% de completitud, exactitud y consistencia. Los datos son perfectos."
 
-| Gráfico | Archivo | Descripción |
-|---------|---------|-------------|
-| Anomalías | `anomalias.png` | Proporción de eventos anómalos vs normales + tipos de anomalías |
-| Severidad | `severidad_eventos.png` | Distribución de severidad en eventos normales vs anómalos |
-| Clientes | `clientes_afectados.png` | Criticidad y sectores de clientes |
-| Calidad | `calidad_datos.png` | Heatmap de métricas DAMA por tabla/columna |
-| Cascada | `grafico_cascada.png` | Filtrado progresivo de 18,000 a <100 |
+### Lo que el analisis critico revelo
+- **8 de 39 metricas FALLIDAS** (20.5% de fallo)
+- **10 problemas criticos** incluyendo FK huerfanas e inconsistencias temporales
+- **3 advertencias** sobre valores fuera de catalogo
 
----
+### Lecciones para la Gestion de Datos
 
-## 7. Conclusiones
-
-1. **La calidad de datos es fundamental en ciberseguridad**: El caso SUNBURST demuestra que datos mal gestionados pueden llevar a pánico innecesario o a pasar por alto amenazas reales.
-
-2. **Las métricas DAMA proveen un marco estructurado**: Completitud, Exactitud y Consistencia son dimensiones mínimas que todo dataset debe cumplir antes de ser analizado.
-
-3. **La detección de anomalías requiere contexto**: No basta con identificar valores atípicos estadísticamente; se necesita conocimiento del dominio (tipos de ataques, patrones de APT) para interpretar los hallazgos.
-
-4. **La comunicación de datos en crisis es crítica**: La diferencia entre 18,000 y <100 muestra cómo una cifra mal contextualizada puede tener consecuencias reputacionales severas.
+1. **Los datos nunca son perfectos**: Un reporte que dice 100% en todo es sospechoso.
+2. **La consistencia es mas importante que la completitud**: Un campo nulo es molesto; una FK huerfana invalida toda una cadena de analisis.
+3. **'Desconocido' es peor que NULL**: Un NULL es honesto; 'Desconocido' parece un dato real sin serlo.
+4. **Las inconsistencias temporales destruyen la causalidad**: Si una instalacion parece anterior al software, todo el analisis temporal se compromete.
+5. **La calidad de datos es critica en ciberseguridad**: En SUNBURST, la diferencia entre 18,000 y <100 depende de la precision de los datos.

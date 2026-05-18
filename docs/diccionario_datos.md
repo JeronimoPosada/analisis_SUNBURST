@@ -1,7 +1,7 @@
 # Diccionario de Datos - Caso SUNBURST
 
 ## Proyecto: Análisis de Gestión de Datos del Caso SUNBURST de SolarWinds
-### Universidad de San Buenaventura | Gestión de Datos | 3er Semestre
+### Universidad de San Buenaventura | Gestión de Datos | 3er Semestre | Yeremi Osmar Diaz Silva, Jerónimo Posada Gil
 
 ---
 

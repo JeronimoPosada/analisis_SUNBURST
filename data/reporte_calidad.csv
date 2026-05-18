@@ -1,22 +1,22 @@
 tabla,columna,metrica,valor_actual,umbral,estado
 clientes,cliente_id,Completitud,100.0,95.0,APROBADO
 clientes,cliente_id,Exactitud,100.0,90.0,APROBADO
-clientes,nombre_organizacion,Completitud,100.0,95.0,APROBADO
-clientes,nombre_organizacion,Exactitud,100.0,90.0,APROBADO
+clientes,nombre_organizacion,Completitud,94.12,95.0,FALLIDO
+clientes,nombre_organizacion,Exactitud,94.12,90.0,APROBADO
 clientes,tipo_org,Completitud,100.0,95.0,APROBADO
 clientes,tipo_org,Exactitud,100.0,90.0,APROBADO
-clientes,pais,Completitud,100.0,95.0,APROBADO
-clientes,pais,Exactitud,100.0,90.0,APROBADO
+clientes,pais,Completitud,96.08,95.0,APROBADO
+clientes,pais,Exactitud,96.08,90.0,APROBADO
 clientes,sector,Completitud,100.0,95.0,APROBADO
 clientes,sector,Exactitud,100.0,90.0,APROBADO
-clientes,criticidad,Completitud,100.0,95.0,APROBADO
-clientes,criticidad,Exactitud,100.0,90.0,APROBADO
+clientes,criticidad,Completitud,98.04,95.0,APROBADO
+clientes,criticidad,Exactitud,98.04,90.0,APROBADO
 versiones_software,version_id,Completitud,100.0,95.0,APROBADO
 versiones_software,version_id,Exactitud,100.0,90.0,APROBADO
 versiones_software,nombre_version,Completitud,100.0,95.0,APROBADO
 versiones_software,nombre_version,Exactitud,100.0,90.0,APROBADO
-versiones_software,fecha_release,Completitud,100.0,95.0,APROBADO
-versiones_software,fecha_release,Exactitud,100.0,90.0,APROBADO
+versiones_software,fecha_release,Completitud,87.5,95.0,FALLIDO
+versiones_software,fecha_release,Exactitud,87.5,90.0,FALLIDO
 versiones_software,contiene_sunburst,Completitud,100.0,95.0,APROBADO
 versiones_software,contiene_sunburst,Exactitud,100.0,90.0,APROBADO
 versiones_software,fecha_compilacion,Completitud,100.0,95.0,APROBADO
@@ -29,8 +29,12 @@ instalaciones,version_id,Completitud,100.0,95.0,APROBADO
 instalaciones,version_id,Exactitud,100.0,90.0,APROBADO
 instalaciones,fecha_instalacion,Completitud,100.0,95.0,APROBADO
 instalaciones,fecha_instalacion,Exactitud,100.0,90.0,APROBADO
-instalaciones,nivel_datos_sensibles,Completitud,100.0,95.0,APROBADO
-instalaciones,nivel_datos_sensibles,Exactitud,100.0,90.0,APROBADO
-instalaciones,cliente_id (FK),Consistencia,100.0,100.0,APROBADO
-instalaciones,version_id (FK),Consistencia,100.0,100.0,APROBADO
-instalaciones,fecha_instalacion vs fecha_release,Consistencia,100.0,100.0,APROBADO
+instalaciones,nivel_datos_sensibles,Completitud,98.0,95.0,APROBADO
+instalaciones,nivel_datos_sensibles,Exactitud,98.0,90.0,APROBADO
+instalaciones,cliente_id (FK→clientes),Consistencia,98.0,100.0,FALLIDO
+instalaciones,version_id (FK→versiones),Consistencia,99.0,100.0,FALLIDO
+instalaciones,fecha_instalacion >= fecha_release,Consistencia,96.67,100.0,FALLIDO
+instalaciones,fecha_instalacion (rango 2019-2021),Consistencia,99.0,100.0,FALLIDO
+clientes,cliente_id (unicidad PK),Consistencia,98.04,100.0,FALLIDO
+versiones_software,version_id (unicidad PK),Consistencia,100.0,100.0,APROBADO
+instalaciones,instalacion_id (unicidad PK),Consistencia,100.0,100.0,APROBADO
