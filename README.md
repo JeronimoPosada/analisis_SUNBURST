@@ -81,7 +81,7 @@ Actividad_SUNBURST/
 
 ### 1. Clonar el repositorio
 ```bash
-git clone <url-del-repositorio>
+git clone https://github.com/JeronimoPosada/analisis_SUNBURST.git
 cd Actividad_SUNBURST
 ```
 
